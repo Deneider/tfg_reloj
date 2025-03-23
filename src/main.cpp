@@ -34,14 +34,8 @@ void conectar_wifi() {
 
 void enviar_hola_mundo(lv_event_t * e) {
     Serial.println("Hola Mundo");           //Imprime hola mundo en el puerto Serial
+    Serial.println(WiFi.macAddress());
     Serial.println(WiFi.localIP());         //Indica la IP
-    if (WiFi.status() == WL_CONNECTED) {
-        WiFiClient client;
-        if (client.connect("example.com", 80)) { // Cambiar por un servidor real
-            client.println("Hola Mundo desde ESP32");
-            client.stop();
-        }
-    }
 }
 
 void mostrar_qr(lv_event_t * e) {               // pantalla de mostrar QR
@@ -51,7 +45,9 @@ void mostrar_qr(lv_event_t * e) {               // pantalla de mostrar QR
     lv_qrcode_set_size(qr_code, 120);                      //Tamaño de QR
     lv_qrcode_set_dark_color(qr_code, lv_color_hex(0x000000));                                  // color negro || Colores de QR para que sea en blanco y negro, los colores son RGB a hexadecimal, por eso el 0x
     lv_qrcode_set_light_color(qr_code, lv_color_hex(0xFFFFFF));                                // color blanco
-    lv_qrcode_update(qr_code, "https://youtube.com", strlen("https://youtube.com"));
+    String mac = WiFi.macAddress();                                                             // Obtiene la MAC como String
+    lv_qrcode_update(qr_code, mac.c_str(), mac.length());                                       // Convierte a const char* y actualiza el QR
+
     lv_obj_align(qr_code, LV_ALIGN_CENTER, 0, -20);                                     // Pongo el qr en el centro de la pantalla, hay que tener en cuenta que las dimensiones del reloj son 240*240 y la pantalla es redonda y LVGL pinta en un cuadrado
     
     btn_volver = lv_btn_create(lv_scr_act());                                           //Boton de volver
