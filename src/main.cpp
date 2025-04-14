@@ -7,7 +7,7 @@
 // Declaración de funciones antes de usarlas
 void mostrar_botones();
 void ocultar_qr(lv_event_t * e);
-void consultar_cliente(lv_event_t * e);
+void consultar_cliente();
 void mostrar_mensaje(const String& mensaje);
 void mostrar_qr(lv_event_t * e);
 void conectar_wifi();
@@ -20,9 +20,6 @@ const char* api_url_base = "http://90.169.44.35:8000/apiDesubicados/obtener_clie
 lv_obj_t *btn_qr, *qr_code, *btn_volver, *label_info;
 
 unsigned long lv_last_tick = 0;
-unsigned long ultimo_intento = 0;
-const unsigned long intervalo_consulta = 10000;  // Cada 10 segundos
-
 bool cliente_vinculado = false;
 String nombre_anterior = "";
 int puntos_anterior = -1;  // Valor inicial que nunca sería válido
@@ -59,7 +56,7 @@ void mostrar_mensaje(const String& mensaje) {
     }
 }
 
-void consultar_cliente(lv_event_t * e) {
+void consultar_cliente() {
     if (WiFi.status() != WL_CONNECTED) {
         mostrar_mensaje("WiFi no conectado");
         return;
@@ -96,7 +93,7 @@ void consultar_cliente(lv_event_t * e) {
                 nombre_anterior = nombre;
                 puntos_anterior = puntos_actuales;
             } else if (puntos_actuales < puntos_anterior) {
-                mensaje = "¡Alerta! Los puntos han bajado.\nNombre: " + nombre + "\nPuntos: " + String(puntos_actuales);
+                mensaje = "Nombre: " + nombre + "\nPuntos: " + String(puntos_actuales);
             } else {
                 mensaje = "Nombre: " + nombre + "\nPuntos: " + String(puntos_actuales);
             }
@@ -131,6 +128,9 @@ void mostrar_qr(lv_event_t * e) {               // pantalla de mostrar QR
     lv_obj_t *label = lv_label_create(btn_volver);  
     lv_label_set_text(label, "Volver");  // Texto
     lv_obj_add_event_cb(btn_volver, ocultar_qr, LV_EVENT_CLICKED, NULL); // Método para volver
+    
+    // Consultar el cliente solo cuando se muestre el QR
+    consultar_cliente();
 }
 
 void ocultar_qr(lv_event_t * e) {
@@ -155,7 +155,6 @@ void setup() {
     conectar_wifi();
     mostrar_mensaje("Reloj no vinculado");  // Muestra mensaje inicial centrado
     mostrar_botones();  // Mostrar el botón "Mostrar QR"
-    ultimo_intento = millis();
 }
 
 void loop() {
@@ -163,9 +162,4 @@ void loop() {
     lv_tick_inc(ahora - lv_last_tick);
     lv_last_tick = ahora;
     lv_timer_handler();
-
-    if (!cliente_vinculado && (ahora - ultimo_intento >= intervalo_consulta)) {
-        consultar_cliente(NULL);
-        ultimo_intento = ahora;
-    }
 }
