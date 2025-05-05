@@ -13,9 +13,15 @@ void mostrar_qr(lv_event_t * e);
 void conectar_wifi();
 
 // Variables globales
-const char* ssid = "Livebox6-1461";
-const char* password = "726fQ6z3HXnP";
-const char* api_url_base = "http://90.169.44.35:8000/apiDesubicados/obtener_cliente_por_mac/";  // Sustituye TU_IP_LOCAL por la IP real del backend
+//Movistar_7E3E
+//cS4rE2LoxWUnJZ274jn8
+//const char* ssid = "Livebox6-1461";
+//const char* password = "726fQ6z3HXnP";
+
+const char* ssid = "GalaxyA12CE0B";
+const char* password = "gazpaxonvtl2023";
+
+const char* api_url_base = "http://obkserver.duckdns.org:8000/apiDesubicados/obtener_cliente_por_mac/";  // Sustituye TU_IP_LOCAL por la IP real del backend
 
 lv_obj_t *btn_qr, *qr_code, *btn_volver, *label_info;
 
