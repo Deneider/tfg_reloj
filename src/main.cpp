@@ -15,11 +15,11 @@ void conectar_wifi();
 // Variables globales
 //Movistar_7E3E
 //cS4rE2LoxWUnJZ274jn8
-//const char* ssid = "Livebox6-1461";
+//const char* ssid = "Livebox6-1461" GalaxyA12CE0B gazpaxonvtl2023;
 //const char* password = "726fQ6z3HXnP";
 
-const char* ssid = "GalaxyA12CE0B";
-const char* password = "gazpaxonvtl2023";
+const char* ssid = "RedmiDiego";
+const char* password = "COMPOSITE";
 
 const char* api_url_base = "http://obkserver.duckdns.org:8000/apiDesubicados/obtener_cliente_por_mac/";  // Sustituye TU_IP_LOCAL por la IP real del backend
 
@@ -140,9 +140,10 @@ void mostrar_qr(lv_event_t * e) {               // pantalla de mostrar QR
 }
 
 void ocultar_qr(lv_event_t * e) {
-    lv_obj_del(qr_code);  // Elimina el QR
-    lv_obj_del(btn_volver); // Elimina el botón de "Volver"
-    mostrar_botones();  // Vuelve a mostrar los botones iniciales
+    lv_obj_del(qr_code);      // Elimina el QR
+    lv_obj_del(btn_volver);   // Elimina el botón de "Volver"
+    mostrar_botones();        // Vuelve a mostrar los botones iniciales
+    consultar_cliente();      // Vuelve a consultar la información del cliente
 }
 
 void mostrar_botones() {  // Botones iniciales
