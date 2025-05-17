@@ -21,7 +21,7 @@ void conectar_wifi();
 const char* ssid = "RedmiDiego";
 const char* password = "COMPOSITE";
 
-const char* api_url_base = "http://obkserver.duckdns.org:8000/apiDesubicados/obtener_cliente_por_mac/";  // Sustituye TU_IP_LOCAL por la IP real del backend
+const char* api_url_base = "http://obkserver.duckdns.org:8000/apiDesubicados/obtener_cliente_por_mac/";  // enlace de mi API
 
 lv_obj_t *btn_qr, *qr_code, *btn_volver, *label_info;
 
@@ -57,43 +57,43 @@ void mostrar_mensaje(const String& mensaje) {
         lv_label_set_long_mode(label_info, LV_LABEL_LONG_WRAP);  // Permite el ajuste de línea si es necesario
         lv_label_set_text(label_info, mensaje.c_str());
         
-        // Alineación centrada tanto en X como en Y
+        // Alineacion centrada tanto en X como en Y
         lv_obj_align(label_info, LV_ALIGN_CENTER, 30, -20);  // Centra el texto
     }
 }
 
 void consultar_cliente() {
-    if (WiFi.status() != WL_CONNECTED) {
-        mostrar_mensaje("WiFi no conectado");
-        return;
+    if (WiFi.status() != WL_CONNECTED) {//comprueba si tiene wifi
+        mostrar_mensaje("WiFi no conectado");// da error si no hay wifi
+        return;// sale de la funcion
     }
 
     String mac = WiFi.macAddress();  // La MAC viene con dos puntos
     
-    String url = api_url_base + mac;
+    String url = api_url_base + mac;// Añade la MAC al final de la url para consultar si esta enlazada a un cliente
     Serial.print("Consultando API: ");
-    Serial.println(url);
+    Serial.println(url);// se comprueba por el serial si esta de forma correcta escrita la url
 
-    HTTPClient http;
-    http.begin(url);
-    int httpCode = http.GET();
+    HTTPClient http; // inicia un objeto para hacer peticiones http, debido a fastapi
+    http.begin(url);  // Conecta con la ur
+    int httpCode = http.GET();  // hace el get ;
 
-    if (httpCode == 200) {
-        String respuesta = http.getString();
-        Serial.println("Respuesta: " + respuesta);
+    if (httpCode == 200) {// 200 es exito
+        String respuesta = http.getString();// recoge la respuesta
+        Serial.println("Respuesta: " + respuesta);// Se comprueba si es correcta la respuesta
 
         // Extraer nombre y puntos de la respuesta
-        String nombre = respuesta.substring(respuesta.indexOf("nombre") + 9);
-        nombre = nombre.substring(0, nombre.indexOf("\""));
-        String puntos = respuesta.substring(respuesta.indexOf("puntos") + 8);
-        puntos = puntos.substring(0, puntos.indexOf("}"));
+        String nombre = respuesta.substring(respuesta.indexOf("nombre") + 9);// Separa nombre de la variable 
+        nombre = nombre.substring(0, nombre.indexOf("\""));// se queda con la variable
+        String puntos = respuesta.substring(respuesta.indexOf("puntos") + 8);// Separa puntos de la cantidad de puntos
+        puntos = puntos.substring(0, puntos.indexOf("}"));//se queda con la variable
         
         // Convertir puntos a entero
         int puntos_actuales = puntos.toInt();
 
         // Verificar si los puntos han bajado
         String mensaje;
-        if (nombre != "" && puntos_actuales >= 0) {
+        if (nombre != "" && puntos_actuales >= 0) { //imprime la informacion
             if (nombre != nombre_anterior) {
                 mensaje = "Nombre: " + nombre + "\nPuntos: " + puntos;
                 nombre_anterior = nombre;
@@ -165,8 +165,8 @@ void setup() {
 }
 
 void loop() {
-    unsigned long ahora = millis();
-    lv_tick_inc(ahora - lv_last_tick);
-    lv_last_tick = ahora;
-    lv_timer_handler();
+    unsigned long ahora = millis();// tiempo en milisegundos desde que se incio el programa en el reloj
+    lv_tick_inc(ahora - lv_last_tick); // necesario para que LVGL actualice las animaciones
+    lv_last_tick = ahora; //actualiza el valor del ultimo tick
+    lv_timer_handler(); //Manejador de LVGL
 }
