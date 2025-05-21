@@ -10,5 +10,4 @@ Para poder interactuar con el reloj es necesario crear clientes en la aplicació
 
 ### Descripción
 
-Creación de software interactivo para un reloj programable en arduino (ESP32-2424S012).
-
+Creacion de software interactivo para un reloj programable en arduino (ESP32-2424S012).
